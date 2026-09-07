@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Two-Way Tourist Translator</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="/static/css/styles.css" />
+</head>
+<body class="bg-slate-950 text-slate-100 min-h-screen flex font-sans">
+
+  <!-- ================= SIDEBAR ================= -->
+  <aside class="w-64 bg-slate-900 border-r border-slate-800 p-6 flex flex-col justify-between shrink-0">
+    <div>
+      <h2 class="text-xs font-bold uppercase tracking-wider text-slate-400 mb-4">Configuration</h2>
+      
+      <!-- Local Language Selector -->
+      <label class="block text-sm font-medium text-slate-300 mb-2">Local Language</label>
+      <select id="local-lang" class="w-full bg-slate-800 text-white rounded-lg p-2.5 border border-slate-700 outline-none text-sm mb-6 focus:ring-2 focus:ring-red-500">
+        <option value="Spanish" selected>Spanish</option>
+        <option value="French">French</option>
+        <option value="Japanese">Japanese</option>
+        <option value="German">German</option>
+        <option value="Italian">Italian</option>
+        <option value="Yoruba">Yoruba</option>
+        <option value="Arabic">Arabic</option>
+        <option value="Mandarin Chinese">Mandarin Chinese</option>
+      </select>
+
+      <!-- Tourist Language Selector -->
+      <label class="block text-sm font-medium text-slate-300 mb-2">Tourist Language</label>
+      <select id="tourist-lang" class="w-full bg-slate-800 text-white rounded-lg p-2.5 border border-slate-700 outline-none text-sm focus:ring-2 focus:ring-blue-500">
+        <option value="English" selected>English</option>
+        <option value="Spanish">Spanish</option>
+        <option value="French">French</option>
+        <option value="German">German</option>
+      </select>
+    </div>
+
+    <div class="text-xs text-slate-500 border-t border-slate-800 pt-4">
+      Powered by <span class="text-slate-300 font-semibold">AssemblyAI Universal-1</span> & <span class="text-slate-300 font-semibold">LeMUR</span>
+    </div>
+  </aside>
+
+  <!-- ================= MAIN CONTENT ================= -->
+  <main class="flex-1 p-10 max-w-4xl">
+    <!-- Header -->
+    <header class="mb-8">
+      <h1 class="text-3xl font-bold flex items-center gap-3 text-white">
+        <span>💬</span> Two-Way Tourist Translator
+      </h1>
+      <p class="text-slate-400 mt-2 text-sm">
+        Translate local speech to English, then voice your response back.
+      </p>
+    </header>
+
+    <!-- Navigation Tabs -->
+    <div class="flex border-b border-slate-800 mb-8 gap-4">
+      <button id="tab-btn-listen" class="pb-3 text-sm font-semibold flex items-center gap-2 border-b-2 border-red-500 text-red-400 transition">
+        👂 Listen to Local
+      </button>
+      <button id="tab-btn-respond" class="pb-3 text-sm font-semibold flex items-center gap-2 border-b-2 border-transparent text-slate-400 hover:text-slate-200 transition">
+        🗣️ Respond to Local
+      </button>
+    </div>
+
+    <!-- ================= TAB 1: LISTEN TO LOCAL ================= -->
+    <section id="tab-listen-content" class="space-y-6">
+      <h2 id="listen-heading" class="text-2xl font-bold text-white">
+        Record Local Speaker (Spanish)
+      </h2>
+
+      <!-- Record Button -->
+      <button id="btn-record-local" class="px-6 py-3 bg-slate-800 hover:bg-slate-700 active:bg-slate-600 border border-slate-700 rounded-xl font-medium text-sm flex items-center gap-2 transition shadow cursor-pointer">
+        <span class="w-3 h-3 rounded-full bg-red-500"></span>
+        <span id="btn-local-text">Record Local (Hold to Speak)</span>
+      </button>
+
+      <!-- Results Card -->
+      <div class="bg-slate-900 border border-slate-800 rounded-2xl p-6 mt-6 min-h-[160px] flex flex-col justify-center">
+        <div class="text-xs uppercase tracking-wider text-slate-500 font-semibold mb-2">Translation (For Tourist)</div>
+        <p id="local-output" class="text-xl font-semibold text-slate-200">
+          [Press and hold the button above to record local speech]
+        </p>
+        <p id="local-subtext" class="text-xs text-slate-400 mt-3"></p>
+      </div>
+    </section>
+
+    <!-- ================= TAB 2: RESPOND TO LOCAL ================= -->
+    <section id="tab-respond-content" class="space-y-6 hidden">
+      <h2 id="respond-heading" class="text-2xl font-bold text-white">
+        Record Your Response (English)
+      </h2>
+
+      <!-- Record Button -->
+      <button id="btn-record-tourist" class="px-6 py-3 bg-slate-800 hover:bg-slate-700 active:bg-slate-600 border border-slate-700 rounded-xl font-me
