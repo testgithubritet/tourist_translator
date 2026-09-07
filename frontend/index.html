@@ -5,18 +5,27 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Two-Way Tourist Translator</title>
   <script src="https://cdn.tailwindcss.com"></script>
-  <link rel="stylesheet" href="/static/css/styles.css" />
+  <style>
+    .recording-pulse {
+      animation: pulse-ring 1.5s infinite;
+    }
+    @keyframes pulse-ring {
+      0% { box-shadow: 0 0 0 0 rgba(239, 68, 68, 0.7); }
+      70% { box-shadow: 0 0 0 15px rgba(239, 68, 68, 0); }
+      100% { box-shadow: 0 0 0 0 rgba(239, 68, 68, 0); }
+    }
+  </style>
 </head>
-<body class="bg-slate-950 text-slate-100 min-h-screen flex font-sans">
+<body class="bg-slate-950 text-slate-100 min-h-screen flex font-sans select-none">
 
   <!-- ================= SIDEBAR ================= -->
-  <aside class="w-64 bg-slate-900 border-r border-slate-800 p-6 flex flex-col justify-between shrink-0">
+  <aside class="w-72 bg-slate-900 border-r border-slate-800 p-6 flex flex-col justify-between shrink-0">
     <div>
-      <h2 class="text-xs font-bold uppercase tracking-wider text-slate-400 mb-4">Configuration</h2>
+      <h2 class="text-xs font-bold uppercase tracking-wider text-slate-400 mb-6">Language Settings</h2>
       
-      <!-- Local Language Selector -->
-      <label class="block text-sm font-medium text-slate-300 mb-2">Local Language</label>
-      <select id="local-lang" class="w-full bg-slate-800 text-white rounded-lg p-2.5 border border-slate-700 outline-none text-sm mb-6 focus:ring-2 focus:ring-red-500">
+      <!-- Local Language Selection -->
+      <label class="block text-sm font-semibold text-slate-300 mb-2">Local Speaker Language</label>
+      <select id="local-lang" class="w-full bg-slate-800 text-white rounded-lg p-2.5 border border-slate-700 outline-none text-sm mb-6 focus:ring-2 focus:ring-red-500 cursor-pointer">
         <option value="Spanish" selected>Spanish</option>
         <option value="French">French</option>
         <option value="Japanese">Japanese</option>
@@ -27,9 +36,9 @@
         <option value="Mandarin Chinese">Mandarin Chinese</option>
       </select>
 
-      <!-- Tourist Language Selector -->
-      <label class="block text-sm font-medium text-slate-300 mb-2">Tourist Language</label>
-      <select id="tourist-lang" class="w-full bg-slate-800 text-white rounded-lg p-2.5 border border-slate-700 outline-none text-sm focus:ring-2 focus:ring-blue-500">
+      <!-- Tourist Language Selection -->
+      <label class="block text-sm font-semibold text-slate-300 mb-2">Tourist Language</label>
+      <select id="tourist-lang" class="w-full bg-slate-800 text-white rounded-lg p-2.5 border border-slate-700 outline-none text-sm focus:ring-2 focus:ring-blue-500 cursor-pointer">
         <option value="English" selected>English</option>
         <option value="Spanish">Spanish</option>
         <option value="French">French</option>
@@ -42,55 +51,223 @@
     </div>
   </aside>
 
-  <!-- ================= MAIN CONTENT ================= -->
+  <!-- ================= MAIN CONTENT AREA ================= -->
   <main class="flex-1 p-10 max-w-4xl">
-    <!-- Header -->
+    <!-- Header Title -->
     <header class="mb-8">
-      <h1 class="text-3xl font-bold flex items-center gap-3 text-white">
+      <h1 class="text-3xl font-extrabold flex items-center gap-3 text-white">
         <span>💬</span> Two-Way Tourist Translator
       </h1>
       <p class="text-slate-400 mt-2 text-sm">
-        Translate local speech to English, then voice your response back.
+        Translate local speech into your language, then voice your response back.
       </p>
     </header>
 
-    <!-- Navigation Tabs -->
-    <div class="flex border-b border-slate-800 mb-8 gap-4">
-      <button id="tab-btn-listen" class="pb-3 text-sm font-semibold flex items-center gap-2 border-b-2 border-red-500 text-red-400 transition">
+    <!-- TABS -->
+    <div class="flex border-b border-slate-800 mb-8 gap-6">
+      <button id="tab-btn-listen" class="pb-3 text-sm font-bold flex items-center gap-2 border-b-2 border-red-500 text-red-400 cursor-pointer transition">
         👂 Listen to Local
       </button>
-      <button id="tab-btn-respond" class="pb-3 text-sm font-semibold flex items-center gap-2 border-b-2 border-transparent text-slate-400 hover:text-slate-200 transition">
+      <button id="tab-btn-respond" class="pb-3 text-sm font-bold flex items-center gap-2 border-b-2 border-transparent text-slate-400 hover:text-slate-200 cursor-pointer transition">
         🗣️ Respond to Local
       </button>
     </div>
 
     <!-- ================= TAB 1: LISTEN TO LOCAL ================= -->
-    <section id="tab-listen-content" class="space-y-6">
+    <div id="tab-listen-content" class="space-y-6 block">
       <h2 id="listen-heading" class="text-2xl font-bold text-white">
         Record Local Speaker (Spanish)
       </h2>
 
-      <!-- Record Button -->
-      <button id="btn-record-local" class="px-6 py-3 bg-slate-800 hover:bg-slate-700 active:bg-slate-600 border border-slate-700 rounded-xl font-medium text-sm flex items-center gap-2 transition shadow cursor-pointer">
-        <span class="w-3 h-3 rounded-full bg-red-500"></span>
-        <span id="btn-local-text">Record Local (Hold to Speak)</span>
+      <button id="btn-record-local" class="px-6 py-3.5 bg-slate-800 hover:bg-slate-700 border border-slate-700 rounded-xl font-semibold text-sm flex items-center gap-3 transition shadow cursor-pointer">
+        <span class="w-3.5 h-3.5 rounded-full bg-red-500"></span>
+        <span id="btn-local-text">Click to Record Local</span>
       </button>
 
-      <!-- Results Card -->
-      <div class="bg-slate-900 border border-slate-800 rounded-2xl p-6 mt-6 min-h-[160px] flex flex-col justify-center">
-        <div class="text-xs uppercase tracking-wider text-slate-500 font-semibold mb-2">Translation (For Tourist)</div>
-        <p id="local-output" class="text-xl font-semibold text-slate-200">
-          [Press and hold the button above to record local speech]
+      <!-- Output Card -->
+      <div class="bg-slate-900 border border-slate-800 rounded-2xl p-6 min-h-[160px] flex flex-col justify-center shadow-inner">
+        <div class="text-xs uppercase tracking-wider text-slate-500 font-bold mb-2">Translation (For You / Tourist)</div>
+        <p id="local-output" class="text-xl font-medium text-slate-200">
+          [Click the button above and have the local speak]
         </p>
         <p id="local-subtext" class="text-xs text-slate-400 mt-3"></p>
       </div>
-    </section>
+    </div>
 
     <!-- ================= TAB 2: RESPOND TO LOCAL ================= -->
-    <section id="tab-respond-content" class="space-y-6 hidden">
+    <div id="tab-respond-content" class="space-y-6 hidden">
       <h2 id="respond-heading" class="text-2xl font-bold text-white">
         Record Your Response (English)
       </h2>
 
-      <!-- Record Button -->
-      <button id="btn-record-tourist" class="px-6 py-3 bg-slate-800 hover:bg-slate-700 active:bg-slate-600 border border-slate-700 rounded-xl font-me
+      <button id="btn-record-tourist" class="px-6 py-3.5 bg-slate-800 hover:bg-slate-700 border border-slate-700 rounded-xl font-semibold text-sm flex items-center gap-3 transition shadow cursor-pointer">
+        <span class="w-3.5 h-3.5 rounded-full bg-blue-500"></span>
+        <span id="btn-tourist-text">Click to Record Your Response</span>
+      </button>
+
+      <!-- Output Card -->
+      <div class="bg-slate-900 border border-slate-800 rounded-2xl p-6 min-h-[160px] flex flex-col justify-center shadow-inner">
+        <div class="text-xs uppercase tracking-wider text-slate-500 font-bold mb-2">Translation (For Local Speaker)</div>
+        <p id="tourist-output" class="text-xl font-medium text-slate-200">
+          [Click the button above and speak your reply]
+        </p>
+        <p id="tourist-subtext" class="text-xs text-slate-400 mt-3"></p>
+      </div>
+    </div>
+  </main>
+
+  <!-- ================= INLINE JAVASCRIPT ================= -->
+  <script>
+    // Elements
+    const tabBtnListen = document.getElementById("tab-btn-listen");
+    const tabBtnRespond = document.getElementById("tab-btn-respond");
+    const tabListenContent = document.getElementById("tab-listen-content");
+    const tabRespondContent = document.getElementById("tab-respond-content");
+
+    const selectLocalLang = document.getElementById("local-lang");
+    const selectTouristLang = document.getElementById("tourist-lang");
+    const listenHeading = document.getElementById("listen-heading");
+    const respondHeading = document.getElementById("respond-heading");
+
+    const btnRecordLocal = document.getElementById("btn-record-local");
+    const btnRecordTourist = document.getElementById("btn-record-tourist");
+    const btnLocalText = document.getElementById("btn-local-text");
+    const btnTouristText = document.getElementById("btn-tourist-text");
+
+    const localOutput = document.getElementById("local-output");
+    const localSubtext = document.getElementById("local-subtext");
+    const touristOutput = document.getElementById("tourist-output");
+    const touristSubtext = document.getElementById("tourist-subtext");
+
+    let currentSpeaker = "local"; // 'local' or 'tourist'
+    let isRecording = false;
+    let mediaRecorder = null;
+    let audioChunks = [];
+
+    // --- Tab Switching Logic ---
+    tabBtnListen.addEventListener("click", () => {
+      currentSpeaker = "local";
+      tabListenContent.style.display = "block";
+      tabRespondContent.style.display = "none";
+
+      tabBtnListen.className = "pb-3 text-sm font-bold flex items-center gap-2 border-b-2 border-red-500 text-red-400 cursor-pointer transition";
+      tabBtnRespond.className = "pb-3 text-sm font-bold flex items-center gap-2 border-b-2 border-transparent text-slate-400 hover:text-slate-200 cursor-pointer transition";
+    });
+
+    tabBtnRespond.addEventListener("click", () => {
+      currentSpeaker = "tourist";
+      tabListenContent.style.display = "none";
+      tabRespondContent.style.display = "block";
+
+      tabBtnRespond.className = "pb-3 text-sm font-bold flex items-center gap-2 border-b-2 border-blue-500 text-blue-400 cursor-pointer transition";
+      tabBtnListen.className = "pb-3 text-sm font-bold flex items-center gap-2 border-b-2 border-transparent text-slate-400 hover:text-slate-200 cursor-pointer transition";
+    });
+
+    // --- Language Change Listeners ---
+    selectLocalLang.addEventListener("change", () => {
+      listenHeading.innerText = `Record Local Speaker (${selectLocalLang.value})`;
+    });
+
+    selectTouristLang.addEventListener("change", () => {
+      respondHeading.innerText = `Record Your Response (${selectTouristLang.value})`;
+    });
+
+    // --- UI Update Helper ---
+    function updateDisplay(speaker, title, subtitle = "") {
+      if (speaker === "local") {
+        localOutput.innerText = title;
+        localSubtext.innerText = subtitle;
+      } else {
+        touristOutput.innerText = title;
+        touristSubtext.innerText = subtitle;
+      }
+    }
+
+    // --- Audio Recording & API Send ---
+    async function startRecording() {
+      try {
+        const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+        mediaRecorder = new MediaRecorder(stream);
+        audioChunks = [];
+
+        mediaRecorder.ondataavailable = (e) => {
+          if (e.data.size > 0) audioChunks.push(e.data);
+        };
+
+        mediaRecorder.onstop = async () => {
+          const audioBlob = new Blob(audioChunks, { type: "audio/webm" });
+          audioChunks = [];
+          await sendAudio(audioBlob);
+        };
+
+        mediaRecorder.start();
+        isRecording = true;
+      } catch (err) {
+        alert("Microphone Error: Please allow microphone permissions in your browser bar.");
+        console.error(err);
+      }
+    }
+
+    function stopRecording() {
+      if (mediaRecorder && mediaRecorder.state === "recording") {
+        mediaRecorder.stop();
+        isRecording = false;
+      }
+    }
+
+    async function sendAudio(blob) {
+      const targetLang = (currentSpeaker === "local") 
+        ? selectTouristLang.value 
+        : selectLocalLang.value;
+
+      updateDisplay(currentSpeaker, "Translating speech...", "Running AssemblyAI Universal-1 & LeMUR...");
+
+      const formData = new FormData();
+      formData.append("audio", blob, "speech.webm");
+      formData.append("target_language", targetLang);
+
+      try {
+        const response = await fetch("/api/translate", {
+          method: "POST",
+          body: formData,
+        });
+
+        const data = await response.json();
+
+        if (data.error) {
+          updateDisplay(currentSpeaker, "Error during translation", data.error);
+        } else if (data.translated_text) {
+          updateDisplay(currentSpeaker, `"${data.translated_text}"`, `Original: "${data.original_text}" (${data.detected_language})`);
+        } else {
+          updateDisplay(currentSpeaker, "(No clear speech detected)", "Please click record and speak clearly.");
+        }
+      } catch (err) {
+        updateDisplay(currentSpeaker, "Network Error", err.message);
+      }
+    }
+
+    // --- Button Click Binding ---
+    function setupRecordingButton(btn, textElem, mode) {
+      btn.addEventListener("click", async () => {
+        currentSpeaker = mode;
+
+        if (!isRecording) {
+          await startRecording();
+          if (isRecording) {
+            btn.classList.add("recording-pulse", "ring-2", "ring-red-400", "bg-slate-700");
+            textElem.innerText = "Recording... Click to Stop & Translate";
+            updateDisplay(mode, "Listening...", "Speak into your microphone now...");
+          }
+        } else {
+          stopRecording();
+          btn.classList.remove("recording-pulse", "ring-2", "ring-red-400", "bg-slate-700");
+          textElem.innerText = (mode === "local") ? "Click to Record Local" : "Click to Record Your Response";
+        }
+      });
+    }
+
+    setupRecordingButton(btnRecordLocal, btnLocalText, "local");
+    setupRecordingButton(btnRecordTourist, btnTouristText, "tourist");
+  </script>
+</body>
+</html>
